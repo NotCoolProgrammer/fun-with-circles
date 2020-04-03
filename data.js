@@ -15,7 +15,7 @@ function Vector(x, y) {
         },
 
         length() {
-            return this.distanceTo(Vector(0, 0));
+            return this.distanceTo(Vector(0, 0))
         },
 
         normalize() {
@@ -27,7 +27,7 @@ function Vector(x, y) {
         },
 
         mul(c) {
-            return Vector(this.x * c, this.y * c);
+            return Vector(this.x * c, this.y * c)
         }
     };
 }
@@ -41,15 +41,15 @@ function Circle(position, velocity, radius) {
             this.position.minus(this.velocity);
             circle.position.minus(circle.velocity);
 
-            let axisVector = this.position.minus(circle.position).normalize();
-            let v1x1 = this.velocity.dot(axisVector);
-            let v1x2 = circle.velocity.dot(axisVector);
+            let axisVector = this.position.minus(circle.position).normalize();      //высчитываем новую ось
+            let v1x1 = this.velocity.dot(axisVector);       //высчитывание проекции скоростей на новые оси до столкновения
+            let v1x2 = circle.velocity.dot(axisVector);     //высчитывание проекции скоростей на новые оси до столкновения
 
-            let v2x1 = ((this.mass  - circle.mass) * v1x1 + 2 * circle.mass * v1x2) / (this.mass + circle.mass);
-            let v2x2 = ((circle.mass - this.mass) * v1x2 + 2 * this.mass * v1x1) / (this.mass + circle.mass);
+            let v2x1 = ((this.mass  - circle.mass) * v1x1 + 2 * circle.mass * v1x2) / (this.mass + circle.mass);    //высчитывание проекции скоростей на новые оси после столкновения
+            let v2x2 = ((circle.mass - this.mass) * v1x2 + 2 * this.mass * v1x1) / (this.mass + circle.mass);       //высчитывание проекции скоростей на новые оси после столкновения
 
-            this.velocity = this.velocity.plus(axisVector.mul(v2x1 - v1x1));
-            circle.velocity = circle.velocity.plus(axisVector.mul(v2x2 - v1x2));
+            this.velocity = this.velocity.plus(axisVector.mul(v2x1 - v1x1));            //перевод на нашу первую ось   
+            circle.velocity = circle.velocity.plus(axisVector.mul(v2x2 - v1x2));        //перевод на нашу первую ось
         }
     };
 }

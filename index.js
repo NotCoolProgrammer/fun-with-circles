@@ -1,5 +1,7 @@
-var canvas = document.getElementById("tutorial");
-var ctx = canvas.getContext("2d");
+'use strict';
+
+let canvas = document.getElementById("tutorial");
+let ctx = canvas.getContext("2d");
 
 ctx.canvas.width  = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
@@ -12,9 +14,9 @@ function drawCircle(circle) {
 }
 
 function drawVector(from, to) {
-    ctx.beginPath();
-    ctx.moveTo(from.x, from.y);
-    ctx.lineTo(to.x, to.y);
+    ctx.beginPath();       // Начинает новый путь
+    ctx.moveTo(from.x, from.y);    // Рередвигает перо в точку (30, 50)
+    ctx.lineTo(to.x, to.y);  // Рисует линию до точки (150, 100)
     ctx.stroke();
 }
 
@@ -24,7 +26,7 @@ function intersects(thisCircle, thatCircle) {
 }
 
 let circles = [
-    Circle(Vector(100, 100), Vector(1,.6), 50),
+    Circle(Vector(100, 100), Vector(1,.6), 50),     //первое - это координаты (пиксели) центра окружности, второе - это скорость
     Circle(Vector(200, 100), Vector(-1,0.5), 10),
     Circle(Vector(300, 400), Vector(0.0,0.3), 40),
     Circle(Vector(400, 60), Vector(0.6,0.4), 40),
@@ -35,34 +37,33 @@ let circles = [
 
 let topLeft = Vector(0,0);
 let bottomRight = Vector(window.innerWidth, window.innerHeight);
-let cursorPosition = Vector(0,0);
+let cursorposition = Vector(0,0);
 
 let gunFrom = Vector(bottomRight.x / 2, bottomRight.y);
-let gunTo = cursorPosition;
+let gunTo = cursorposition;
 
 canvas.addEventListener('mousemove', function(e) {
-    cursorPosition = Vector(e.x, e.y);
-    gunTo = cursorPosition;
-});
+    cursorposition = Vector(e.x, e.y);
+    gunTo = cursorposition;
+})
 
 canvas.addEventListener('mousedown', function(e) {
-    let speed = gunTo.distanceTo(gunFrom) / 100;
-    let bulletVelocity = gunTo.minus(gunFrom).normalize().mul(speed);
+    let speed = gunTo.distanceTo(gunFrom) / 150;
+    let bulletVelocity = cursorposition.minus(gunFrom).normalize().mul(speed);
 
     circles.push(
-        Circle(Vector(e.x, e.y), bulletVelocity, 10),
-    );
-});
+        Circle(Vector(e.x, e.y), bulletVelocity, 15)
+    )
+})
 
-
-function moveCircles(circles) {
+function moveCircles () {
     circles.forEach(function(circle) {
         circle.position.x += circle.velocity.x;
         circle.position.y += circle.velocity.y;
     });
 }
 
-function collideWithBounds(circles, topLeft, bottomRight) {
+function collideWithBounce (circles, topLeft, bottomRight) {
     circles.forEach(function(circle) {
         if (circle.position.x - circle.radius <= topLeft.x) {
             circle.velocity.x = -circle.velocity.x;
@@ -82,7 +83,7 @@ function collideWithBounds(circles, topLeft, bottomRight) {
     });
 }
 
-function collideWithCircles(circles) {
+function collideWithCircles (circles) {
     for (let i = 0; i < circles.length; i++) {
         for (let j = i + 1; j < circles.length; j++) {
             if (intersects(circles[i], circles[j])) {
@@ -92,7 +93,7 @@ function collideWithCircles(circles) {
     }
 }
 
-function renderScene(drawContext, circles, gunFrom, gunTo) {
+function renderScene (drawContext, circles, gunFrom, gunTo) {
     drawContext.canvas.width  = window.innerWidth;
     drawContext.canvas.height = window.innerHeight;
 
@@ -104,8 +105,13 @@ function renderScene(drawContext, circles, gunFrom, gunTo) {
 }
 
 let interval = setInterval(function() {
+
     moveCircles(circles);
-    collideWithBounds(circles, topLeft, bottomRight);
+
+    collideWithBounce(circles, topLeft, bottomRight);
+
     collideWithCircles(circles);
+
     renderScene(ctx, circles, gunFrom, gunTo);
-}, 12);
+
+}, 5);

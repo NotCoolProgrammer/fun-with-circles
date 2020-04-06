@@ -50,6 +50,25 @@ function Circle(position, velocity, radius) {
 
             this.velocity = this.velocity.plus(axisVector.mul(v2x1 - v1x1));            //перевод на нашу первую ось   
             circle.velocity = circle.velocity.plus(axisVector.mul(v2x2 - v1x2));        //перевод на нашу первую ось
+        },
+
+        intersects(circle) {
+            return this.position.distanceTo(circle.position) < 
+                this.radius + circle.radius;
+        },
+
+        isOutOfBounds (topLeft, bottomRight) {
+            if (this.position.x + this.radius < topLeft.x)
+                return true;
+
+            if (this.position.x - this.radius > bottomRight.x)
+                return true;
+
+            if (this.position.y + this.radius < topLeft.y)
+                return true;
+
+            if (this.position.y - this.radius > bottomRight.y)
+                return true;
         }
     };
 }

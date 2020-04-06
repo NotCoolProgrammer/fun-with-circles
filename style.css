@@ -7,4 +7,12 @@ html, body {
 canvas {
     width: 100%;
     height: 100%;
+    position: relative;
+}
+
+#resultOfTheGame {
+    z-index: 1000;
+    position: absolute;
+    top: 100px;
+    left: 100px;
 }
